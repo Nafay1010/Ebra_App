@@ -51,11 +51,20 @@ export default function Products() {
   });
 
   useEffect(() => {
-    fetch("https://fakestoreapi.com/products/categories")
-      .then((res) => res.json())
-      .then((data) => {
-        setCategories(data);
-      });
+    async function fetchCategories() {
+      try {
+        const res = await fetch("https://fakestoreapi.com/products/categories");
+        if (!res.ok) {
+          throw new Error(`Failed to fetch categories: ${res.statusText}`);
+        }
+        const data = await res.json();
+        setCategories(data || []);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setCategories([]); // Optionally set categories to an empty array on error
+      }
+    }
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -63,8 +72,10 @@ export default function Products() {
       setLoading(true);
       try {
         const res = await fetch("https://fakestoreapi.com/products");
+        if (!res.ok) {
+          throw new Error(`Failed to fetch products: ${res.statusText}`);
+        }
         const data = await res.json();
-        console.log(data);
         setProducts(data);
 
         // Find min and max price
@@ -84,8 +95,10 @@ export default function Products() {
         setPriceRanges(ranges);
       } catch (error) {
         console.error("Error fetching products:", error);
+        setProducts([]); // Optionally set products to an empty array on error
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     fetchProducts();
   }, []);
@@ -99,6 +112,7 @@ export default function Products() {
           alt="Shop Hero"
           fill
           className="object-cover"
+          priority
         />
         <div className="space-y-6 absolute inset-0 flex flex-col items-center justify-center text-black">
           <p className="text-sm font-inter">
@@ -277,10 +291,10 @@ export default function Products() {
 
                         <div className="absolute bottom-0 left-0 w-full p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <Button
-                            className="w-full cursor-pointer"
+                            className="w-full cursor-pointer py-5"
                             onClick={(e) => {
                               e.stopPropagation();
-                              addToCart(product);
+                              addToCart(product, 1);
                             }}
                           >
                             Add to Cart

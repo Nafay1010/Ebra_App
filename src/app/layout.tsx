@@ -5,6 +5,7 @@ import { Inter, Poppins, Space_Grotesk } from "next/font/google";
 import { SidebarProvider } from "./context/SidebarContext";
 import { ProductProvider } from "./context/ProductContext";
 import { Toaster } from "react-hot-toast";
+import Footer from "@/components/custom/footer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const poppins = Poppins({
@@ -38,6 +39,7 @@ export default function RootLayout({
             <Navbar />
             <Toaster />
             <div className="md:py-3 py-1.5 md:px-20 px-4">{children}</div>
+            <Footer />
           </body>
         </SidebarProvider>
       </ProductProvider>

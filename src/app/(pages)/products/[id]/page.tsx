@@ -215,26 +215,34 @@ const ProductDetails = () => {
             <span className="text-gray-400 line-through">${originalPrice}</span>
           </div>
 
-          <div className="bg-gray-100 p-4 rounded-lg">
+          <div className="py-4 rounded-lg">
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">Offer expires in:</span>
+              <span className="text-sm text-gray-600 ">Offer expires in:</span>
             </div>
-            <div className="flex space-x-4 mt-2">
-              <div className="text-center">
-                <span className="text-lg font-bold">{offerTimer.days}</span>
-                <span className="text-sm text-gray-600 block">Days</span>
+            <div className="flex gap-4 mt-2 ">
+              <div className="flex flex-col text-center">
+                <span className="font-spaceGrotesk text-xl font-normal bg-slate-100 px-3 py-2">
+                  {offerTimer.days}
+                </span>
+                <span className="text-xs text-gray-600 block">Days</span>
               </div>
-              <div className="text-center">
-                <span className="text-lg font-bold">{offerTimer.hours}</span>
-                <span className="text-sm text-gray-600 block">Hours</span>
+              <div className="flex flex-col text-center">
+                <span className="font-spaceGrotesk text-xl font-normal bg-slate-100 px-3 py-2">
+                  {offerTimer.hours}
+                </span>
+                <span className="text-xs text-gray-600 block">Hours</span>
               </div>
-              <div className="text-center">
-                <span className="text-lg font-bold">{offerTimer.minutes}</span>
-                <span className="text-sm text-gray-600 block">Minutes</span>
+              <div className="flex flex-col text-center">
+                <span className="font-spaceGrotesk text-xl font-normal bg-slate-100 px-3 py-2">
+                  {offerTimer.minutes}
+                </span>
+                <span className="text-xs text-gray-600 block">Minutes</span>
               </div>
-              <div className="text-center">
-                <span className="text-lg font-bold">{offerTimer.seconds}</span>
-                <span className="text-sm text-gray-600 block">Seconds</span>
+              <div className="flex flex-col text-center">
+                <span className="font-spaceGrotesk text-xl font-normal bg-slate-100  px-3 py-2">
+                  {offerTimer.seconds}
+                </span>
+                <span className="text-xs text-gray-600 block">Seconds</span>
               </div>
             </div>
           </div>
@@ -287,10 +295,10 @@ const ProductDetails = () => {
           </div>
 
           <Button
-            className="w-full cursor-pointer"
+            className="w-full cursor-pointer py-5"
             onClick={(e) => {
               e.stopPropagation();
-              addToCart(product);
+              addToCart(product, quantity);
             }}
           >
             Add to Cart

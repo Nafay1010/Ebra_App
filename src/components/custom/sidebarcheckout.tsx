@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { useEffect } from "react";
 import { Skeleton } from "../ui/skeleton";
+import { useRouter } from "next/navigation";
 
 // Type for product
 interface Product {
@@ -22,6 +23,7 @@ interface SidebarCheckoutProps {
 
 const SidebarCheckout = ({ isOpen, onClose }: SidebarCheckoutProps) => {
   if (!isOpen) return null;
+  const router = useRouter();
 
   useEffect(() => {
     if (isOpen) document.body.style.overflow = "hidden";
@@ -152,6 +154,16 @@ const SidebarCheckout = ({ isOpen, onClose }: SidebarCheckoutProps) => {
         </div>
 
         <Button className="w-full py-3 my-3">Checkout</Button>
+
+        <p
+          onClick={() => {
+            onClose();
+            router.push("/cart");
+          }}
+          className="mb-5 cursor-pointer text-sm hover:font-semibold w-fit mx-auto text-center underline text-black"
+        >
+          View Cart
+        </p>
 
         {/* Close Button */}
         <button

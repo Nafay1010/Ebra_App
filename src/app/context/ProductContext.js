@@ -11,18 +11,41 @@ export const ProductProvider = ({ children }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  // Load cart from local storage when component mounts
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
+
+  // Save cart to local storage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
   // Fetch products from Fake Store API
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
-      const response = await fetch("https://fakestoreapi.com/products");
-      const data = await response.json();
-      const productsWithQuantity = data.map((product) => ({
-        ...product,
-        quantity: 0,
-      }));
-      setProducts(productsWithQuantity);
-      setLoading(false);
+      try {
+        const response = await fetch("https://fakestoreapi.com/products");
+        if (!response.ok) {
+          throw new Error(`Failed to fetch products: ${response.statusText}`);
+        }
+        const data = await response.json();
+        const productsWithQuantity = data.map((product) => ({
+          ...product,
+          quantity: 0,
+        }));
+        setProducts(productsWithQuantity);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        toast.error("Failed to load products. Please try again later.");
+        setProducts([]); // Optionally set products to an empty array on error
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchProducts();
@@ -45,16 +68,15 @@ export const ProductProvider = ({ children }) => {
     );
   };
 
-  const addToCart = (product) => {
-    setCart((prevCart) => {
-      const existingProduct = prevCart.find((p) => p.id === product.id);
-      if (existingProduct) {
-        return prevCart.map((p) =>
-          p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
-        );
-      }
-      return [...prevCart, { ...product, quantity: 1 }];
-    });
+  const addToCart = (product, quantity) => {
+    const existingProduct = cart.find((p) => p.id === product.id);
+    if (existingProduct) {
+      updateQuantity(product.id, existingProduct.quantity + quantity);
+      toast.success("Product Updated");
+      return;
+    }
+
+    setCart((prevCart) => [...prevCart, { ...product, quantity }]);
     toast.success("Product Added");
   };
 
