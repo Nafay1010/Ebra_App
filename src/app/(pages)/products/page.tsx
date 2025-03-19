@@ -9,14 +9,51 @@ import { PiColumnsFill } from "react-icons/pi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Products() {
-  const [selectedCategory, setSelectedCategory] = useState("Living Room");
+  const router = useRouter();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<string[]>([]);
   const [priceRanges, setPriceRanges] = useState<string[]>([]);
-  const [selectedPrice, setSelectedPrice] = useState(priceRanges[0]);
+  const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const filteredProducts = products.filter((product) => {
+    const categoryMatch = selectedCategory
+      ? product.category === selectedCategory
+      : true;
+    const priceMatch = selectedPrice
+      ? product.price >= +selectedPrice.split(" - ")[0].slice(1) &&
+        product.price <= +selectedPrice.split(" - ")[1].slice(1)
+      : true;
+    return categoryMatch && priceMatch;
+  });
+
+  const [sortBy, setSortBy] = useState<string | null>(null);
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortBy === "priceLowToHigh") return a.price - b.price;
+    if (sortBy === "priceHighToLow") return b.price - a.price;
+    if (sortBy === "rating") return b.rating.rate - a.rating.rate;
+    return 0;
+  });
+
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        setCategories(data);
+      });
+  }, []);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -26,15 +63,6 @@ export default function Products() {
         const data = await res.json();
         console.log(data);
         setProducts(data);
-
-        // Get unique categories
-        setCategories(
-          Array.from(
-            new Set(
-              data.map((product: any) => product.category).filter(Boolean)
-            )
-          )
-        );
 
         // Find min and max price
         const prices = data.map((product: any) => product.price);
@@ -51,7 +79,6 @@ export default function Products() {
         });
 
         setPriceRanges(ranges);
-        setSelectedPrice(ranges[0]); // Default range
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -87,7 +114,7 @@ export default function Products() {
       <div className="mx-auto py-10 gap-12 flex w-full">
         {/* Sidebar */}
         <aside className="w-[20%]">
-          <h3 className="font-semibold text-lg mb-10 flex items-center gap-2">
+          <h3 className="font-semibold text-lg mb-14 flex items-center gap-2">
             <SlidersHorizontal size={20} /> Filter
           </h3>
 
@@ -97,7 +124,7 @@ export default function Products() {
               {loading ? (
                 <div className="space-y-2">
                   {[...Array(6)].map((_, i) => (
-                    <Skeleton key={i} className="w-32 h-5" /> // Adjust width & height for category text
+                    <Skeleton key={i} className="w-32 h-5" />
                   ))}
                 </div>
               ) : (
@@ -109,7 +136,13 @@ export default function Products() {
                         ? "text-black underline font-semibold"
                         : "text-gray-500 hover:text-black"
                     }`}
-                    onClick={() => setSelectedCategory(category)}
+                    onClick={() => {
+                      if (selectedCategory === category) {
+                        setSelectedCategory(null);
+                      } else {
+                        setSelectedCategory(category);
+                      }
+                    }}
                   >
                     {category}
                   </li>
@@ -139,8 +172,14 @@ export default function Products() {
                       <span>{price}</span>
                       <Checkbox
                         checked={selectedPrice === price}
-                        onCheckedChange={() => setSelectedPrice(price)}
-                        className="w-5 h-5 border border-gray-900 rounded"
+                        onCheckedChange={() => {
+                          if (selectedPrice === price) {
+                            setSelectedPrice(null);
+                          } else {
+                            setSelectedPrice(price);
+                          }
+                        }}
+                        className="cursor-pointer w-5 h-5 border border-gray-900 rounded"
                       />
                     </li>
                   ))}
@@ -150,13 +189,27 @@ export default function Products() {
 
         {/* Product Grid */}
         <section className="flex-1">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-14">
             <h2 className="text-2xl font-semibold capitalize">
               {selectedCategory}
             </h2>
             <div className="flex items-center gap-4">
-              <span>Sort by</span>
-              <ChevronDown size={16} />
+              <div className="flex items-center gap-4">
+                <Select value={sortBy ?? undefined} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="priceLowToHigh">
+                      Price: Low to High
+                    </SelectItem>
+                    <SelectItem value="priceHighToLow">
+                      Price: High to Low
+                    </SelectItem>
+                    <SelectItem value="rating">Rating</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
               <div className="flex items-center">
                 <BsFillGrid3X3GapFill className="text-4xl px-2.5 bg-slate-100 text-black" />
@@ -181,79 +234,92 @@ export default function Products() {
             </div>
           ) : (
             <div className="grid grid-cols-3 gap-6">
-              {products.map((product) => {
-                const discountPercentage = 50; // Assuming 50% off
-                const discountedPrice =
-                  (product.price * (100 - discountPercentage)) / 100;
+              {sortedProducts.length === 0 ? (
+                <div>
+                  <h1 className="text-2xl">No products found</h1>
+                </div>
+              ) : (
+                sortedProducts.map((product) => {
+                  const discountPercentage = 50; // Assuming 50% off
+                  const discountedPrice =
+                    (product.price * (100 - discountPercentage)) / 100;
 
-                return (
-                  <div
-                    key={product.id}
-                    className="overflow-hidden shadow hover:shadow-lg transition-all duration-75 ease-linear"
-                  >
-                    {/* Product Image and Labels */}
-                    <div className="group relative p-2 bg-[#F2F2F2]">
-                      <Image
-                        src={product.image}
-                        alt={product.title}
-                        width={400}
-                        height={300}
-                        className="w-full h-82 object-cover mb-12 brightness-95"
-                      />
-                      <span className="absolute top-2 left-2 bg-white text-black text-xs font-bold px-2 py-1 rounded">
-                        NEW
-                      </span>
-                      <Image
-                        src={"/assets/icons/heart.svg"}
-                        alt="Heart Icon"
-                        width={40}
-                        height={40}
-                        className="group-hover:block hidden absolute top-2 right-1"
-                      />
-                      <span className="absolute top-10 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
-                        -{discountPercentage}%
-                      </span>
-
-                      {/* Ensure a fixed height so the layout doesn’t shift */}
-                      <div className="absolute bottom-0 left-0 w-full p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Button className="w-full">Add to Cart</Button>
-                      </div>
-                    </div>
-
-                    {/* Product Details */}
-                    <div className="py-4 px-2">
-                      {/* Star Ratings (Fake) */}
-                      <div className="flex justify-start mb-1">
-                        {Array(5)
-                          .fill(0)
-                          .map((_, index) => (
-                            <span
-                              key={index}
-                              className="text-[#343839] text-sm"
-                            >
-                              ★
-                            </span>
-                          ))}
-                      </div>
-
-                      {/* Product Title */}
-                      <h3 className="text-sm font-semibold font-inter text-[#141718]">
-                        {product.title}
-                      </h3>
-
-                      {/* Pricing */}
-                      <p className="text-gray-700 mt-1">
-                        <span className="font-semibold text-sm mr-3">
-                          ${discountedPrice.toFixed(2)}
-                        </span>{" "}
-                        <span className="text-gray-400 line-through text-sm font-normal">
-                          ${product.price.toFixed(2)}
+                  return (
+                    <div
+                      onClick={() => router.push(`/products/${product.id}`)}
+                      key={product.id}
+                      className="cursor-pointer overflow-hidden shadow hover:shadow-lg transition-all duration-75 ease-linear"
+                    >
+                      <div className="group relative p-2 bg-[#F2F2F2]">
+                        <Image
+                          src={product.image}
+                          alt={product.title}
+                          width={400}
+                          height={300}
+                          className="w-full h-82 object-cover mb-12 brightness-95"
+                        />
+                        <span className="absolute top-2 left-2 bg-white text-black text-xs font-bold px-2 py-1 rounded">
+                          NEW
                         </span>
-                      </p>
+                        <Image
+                          src={"/assets/icons/heart.svg"}
+                          alt="Heart Icon"
+                          width={40}
+                          height={40}
+                          className="group-hover:block hidden absolute top-2 right-1"
+                        />
+                        <span className="absolute top-10 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
+                          -{discountPercentage}%
+                        </span>
+
+                        <div className="absolute bottom-0 left-0 w-full p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <Button className="w-full">Add to Cart</Button>
+                        </div>
+                      </div>
+
+                      <div className="py-4 px-2">
+                        <div className="flex justify-start mb-1">
+                          <div className="flex justify-start mb-1">
+                            {Array(Math.round(product.rating.rate))
+                              .fill(0)
+                              .map((_, index) => (
+                                <span
+                                  key={index}
+                                  className="text-[#343839] text-sm"
+                                >
+                                  ★
+                                </span>
+                              ))}
+                            {Array(5 - Math.round(product.rating.rate))
+                              .fill(0)
+                              .map((_, index) => (
+                                <span
+                                  key={index}
+                                  className="text-[#343839] text-sm opacity-30"
+                                >
+                                  ★
+                                </span>
+                              ))}
+                          </div>
+                        </div>
+
+                        <h3 className="text-sm font-semibold font-inter text-[#141718]">
+                          {product.title}
+                        </h3>
+
+                        <p className="text-gray-700 mt-1">
+                          <span className="font-semibold text-sm mr-3">
+                            ${discountedPrice.toFixed(2)}
+                          </span>{" "}
+                          <span className="text-gray-400 line-through text-sm font-normal">
+                            ${product.price.toFixed(2)}
+                          </span>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
           )}
         </section>
