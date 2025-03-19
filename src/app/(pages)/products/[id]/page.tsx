@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FaRegHeart } from "react-icons/fa";
+import { useProducts } from "@/app/context/ProductContext";
 
 interface Product {
   id: number;
@@ -30,6 +31,7 @@ interface OfferTimer {
 const ProductDetails = () => {
   const params = useParams();
   const { id } = params;
+  const { addToCart } = useProducts();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -51,7 +53,7 @@ const ProductDetails = () => {
   useEffect(() => {
     if (!product) return;
 
-    // Set the expiration date (1 day ahead from now)
+    // Expiration date (1 day ahead from now)
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + 1);
 
@@ -284,7 +286,15 @@ const ProductDetails = () => {
             </Button>
           </div>
 
-          <Button className="w-full py-5">Add to Cart</Button>
+          <Button
+            className="w-full cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              addToCart(product);
+            }}
+          >
+            Add to Cart
+          </Button>
 
           <div className="text-sm text-gray-600 space-y-2">
             <p className="flex items-center">

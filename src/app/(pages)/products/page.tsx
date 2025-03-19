@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useProducts } from "@/app/context/ProductContext";
 import {
   Select,
   SelectContent,
@@ -20,6 +21,8 @@ import {
 
 export default function Products() {
   const router = useRouter();
+  const { addToCart } = useProducts();
+
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<string[]>([]);
@@ -248,9 +251,9 @@ export default function Products() {
                     <div
                       onClick={() => router.push(`/products/${product.id}`)}
                       key={product.id}
-                      className="cursor-pointer overflow-hidden shadow hover:shadow-lg transition-all duration-75 ease-linear"
+                      className="group cursor-pointer overflow-hidden shadow hover:shadow-lg transition-all duration-75 ease-linear"
                     >
-                      <div className="group relative p-2 bg-[#F2F2F2]">
+                      <div className=" relative p-2 bg-[#F2F2F2]">
                         <Image
                           src={product.image}
                           alt={product.title}
@@ -273,7 +276,15 @@ export default function Products() {
                         </span>
 
                         <div className="absolute bottom-0 left-0 w-full p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <Button className="w-full">Add to Cart</Button>
+                          <Button
+                            className="w-full cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              addToCart(product);
+                            }}
+                          >
+                            Add to Cart
+                          </Button>
                         </div>
                       </div>
 

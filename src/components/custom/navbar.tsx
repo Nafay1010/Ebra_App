@@ -6,9 +6,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SidebarCheckout from "./sidebarcheckout";
 import { useSidebar } from "@/app/context/SidebarContext";
+import { useProducts } from "@/app/context/ProductContext";
 
 export default function Navbar() {
-  const [items, _] = useState(2);
+  const { cart } = useProducts();
   const [showBanner, setShowBanner] = useState(true);
   const pathname = usePathname();
   const { isOpen, toggleSidebar } = useSidebar();
@@ -110,9 +111,9 @@ export default function Navbar() {
               height={20}
               className="cursor-pointer"
             />
-            {items > 0 && (
+            {cart && cart.length > 0 && (
               <div className="absolute -top-2 -right-4 bg-black text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                {items}
+                {cart.length}
               </div>
             )}
           </div>
