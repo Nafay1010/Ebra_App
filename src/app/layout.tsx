@@ -31,7 +31,7 @@ export default function RootLayout({
         className={`${inter.variable} ${poppins.variable} ${spaceGrotesk.variable} text-foreground`}
       >
         <Navbar />
-        <div className="md:py-3 py-1.5 md:px-32 px-4">{children}</div>
+        <div className="md:py-3 py-1.5 md:px-20 px-4">{children}</div>
       </body>
     </html>
   );
