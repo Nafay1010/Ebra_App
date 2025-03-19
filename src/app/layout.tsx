@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/custom/navbar";
 import { Inter, Poppins, Space_Grotesk } from "next/font/google";
+import { SidebarProvider } from "./context/SidebarContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const poppins = Poppins({
@@ -27,12 +28,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${poppins.variable} ${spaceGrotesk.variable} text-foreground`}
-      >
-        <Navbar />
-        <div className="md:py-3 py-1.5 md:px-20 px-4">{children}</div>
-      </body>
+      <SidebarProvider>
+        <body
+          className={`${inter.variable} ${poppins.variable} ${spaceGrotesk.variable} text-foreground`}
+        >
+          <Navbar />
+
+          <div className="md:py-3 py-1.5 md:px-20 px-4">{children}</div>
+        </body>
+      </SidebarProvider>
     </html>
   );
 }

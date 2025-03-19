@@ -104,21 +104,21 @@ export default function Products() {
             </Link>
             {">"} <span className="pl-4 font-semibold">Products</span>
           </p>
-          <h1 className="text-5xl font-poppins">Shop Page</h1>
+          <h1 className="md:text-5xl text-3xl font-poppins">Shop Page</h1>
           <p className="text-sm font-inter">
             Let’s design the place you always imagined.
           </p>
         </div>
       </section>
 
-      <div className="mx-auto py-10 gap-12 flex w-full">
+      <div className="mx-auto py-10 gap-12 flex flex-col md:flex-row w-full">
         {/* Sidebar */}
-        <aside className="w-[20%]">
-          <h3 className="font-semibold text-lg mb-14 flex items-center gap-2">
+        <aside className="md:w-[20%] w-full lg:max-w-xs">
+          <h3 className="font-semibold text-lg mb-14 flex items-center md:justify-normal justify-center gap-2">
             <SlidersHorizontal size={20} /> Filter
           </h3>
 
-          <div>
+          <div className="md:text-left text-center">
             <h4 className="text-md font-semibold mb-4">CATEGORIES</h4>
             <ul className="space-y-3 h-40 overflow-y-scroll scrollbar-visible">
               {loading ? (
@@ -151,14 +151,14 @@ export default function Products() {
             </ul>
           </div>
 
-          <div className="mt-14">
+          <div className="mt-14 md:text-left text-center">
             <h4 className="text-md font-semibold mb-4">PRICE</h4>
             <ul className="space-y-3">
               {loading
                 ? [...Array(6)].map((_, i) => (
                     <li
                       key={i}
-                      className="flex items-center justify-between gap-2"
+                      className="flex items-center  md:justify-between justify-center md:gap-2 gap-y-2 gap-x-10"
                     >
                       <Skeleton className="w-32 h-5" />{" "}
                       <Skeleton className="w-5 h-5 rounded" />{" "}
@@ -167,7 +167,7 @@ export default function Products() {
                 : priceRanges.map((price) => (
                     <li
                       key={price}
-                      className="flex items-center justify-between gap-2"
+                      className="flex items-center md:justify-between justify-center md:gap-2 gap-y-2 gap-x-10"
                     >
                       <span>{price}</span>
                       <Checkbox
@@ -189,7 +189,7 @@ export default function Products() {
 
         {/* Product Grid */}
         <section className="flex-1">
-          <div className="flex justify-between items-center mb-14">
+          <div className="flex md:justify-between justify-center items-center mb-14">
             <h2 className="text-2xl font-semibold capitalize">
               {selectedCategory}
             </h2>
@@ -233,7 +233,7 @@ export default function Products() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-6 gap-3">
               {sortedProducts.length === 0 ? (
                 <div>
                   <h1 className="text-2xl">No products found</h1>

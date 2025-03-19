@@ -4,11 +4,14 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import SidebarCheckout from "./sidebarcheckout";
+import { useSidebar } from "@/app/context/SidebarContext";
 
 export default function Navbar() {
   const [items, _] = useState(2);
   const [showBanner, setShowBanner] = useState(true);
   const pathname = usePathname();
+  const { isOpen, toggleSidebar } = useSidebar();
 
   const links = [
     { name: "Home", url: "/" },
@@ -94,12 +97,18 @@ export default function Navbar() {
             height={20}
           />
 
-          <div className="relative">
+          <div
+            className="relative"
+            onClick={() => {
+              toggleSidebar();
+            }}
+          >
             <Image
               src="/assets/icons/shopping-bag.svg"
               alt="Cart"
               width={20}
               height={20}
+              className="cursor-pointer"
             />
             {items > 0 && (
               <div className="absolute -top-2 -right-4 bg-black text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
@@ -109,6 +118,15 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+
+      {isOpen && (
+        <SidebarCheckout
+          isOpen={isOpen}
+          onClose={() => {
+            toggleSidebar();
+          }}
+        />
+      )}
     </div>
   );
 }
