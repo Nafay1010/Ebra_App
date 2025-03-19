@@ -4,11 +4,10 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, Percent } from "lucide-react"; // Lucide icons
 
 export default function Navbar() {
-  const [items, setItems] = useState(2); // Example cart items
-  const [showBanner, setShowBanner] = useState(true); // Banner state
+  const [items, _] = useState(2);
+  const [showBanner, setShowBanner] = useState(true);
   const pathname = usePathname();
 
   const links = [
@@ -20,7 +19,6 @@ export default function Navbar() {
 
   return (
     <div className="relative">
-      {/* Banner Section */}
       {showBanner && (
         <div className="bg-gray-100 text-black text-sm flex items-center justify-between px-6 py-2 transition-all duration-300 relative w-full">
           <div className="flex items-center justify-center text-center mx-auto gap-2">
@@ -51,14 +49,17 @@ export default function Navbar() {
             onClick={() => setShowBanner(false)}
             className="hover:opacity-70"
           >
-            <X size={18} />
+            <Image
+              src="/assets/icons/close.svg"
+              alt="close"
+              width={20}
+              height={20}
+            />
           </button>
         </div>
       )}
 
-      {/* Navbar Section */}
       <nav className="flex justify-between items-center my-2 md:py-3 py-1.5 md:px-32 px-4">
-        {/* Logo */}
         <Image
           src="/assets/icons/Logo.svg"
           alt="logo"
@@ -66,7 +67,6 @@ export default function Navbar() {
           height={100}
         />
 
-        {/* Links */}
         <ul className="font-spaceGrotesk hidden md:flex space-x-6">
           {links.map((link) => (
             <li
@@ -80,7 +80,6 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Icons */}
         <div className="flex items-center space-x-4">
           <Image
             src="/assets/icons/search.svg"
@@ -95,7 +94,6 @@ export default function Navbar() {
             height={20}
           />
 
-          {/* Shopping Cart */}
           <div className="relative">
             <Image
               src="/assets/icons/shopping-bag.svg"

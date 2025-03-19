@@ -53,7 +53,6 @@ export default function Products() {
 
   return (
     <div className="w-full">
-      {/* Hero Section */}
       <section className="relative w-full h-96">
         <Image
           src="/assets/pics/product_hero.svg"
@@ -63,15 +62,12 @@ export default function Products() {
         />
       </section>
 
-      {/* Main Content */}
       <div className="container mx-auto px-6 py-10 flex gap-8">
-        {/* Sidebar (Filters) */}
         <aside className="w-1/4">
           <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
             <SlidersHorizontal size={20} /> Filter
           </h3>
 
-          {/* Categories */}
           <div>
             <h4 className="text-md font-semibold mb-2">CATEGORIES</h4>
             <ul className="space-y-2">
@@ -91,7 +87,6 @@ export default function Products() {
             </ul>
           </div>
 
-          {/* Price Filters */}
           <div className="mt-6">
             <h4 className="text-md font-semibold mb-2">PRICE</h4>
             <ul className="space-y-2">
@@ -110,9 +105,7 @@ export default function Products() {
           </div>
         </aside>
 
-        {/* Product Grid */}
         <section className="flex-1">
-          {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-semibold">{selectedCategory}</h2>
             <div className="flex items-center gap-4">
@@ -123,7 +116,6 @@ export default function Products() {
             </div>
           </div>
 
-          {/* Products */}
           <div className="grid grid-cols-3 gap-6">
             {products.map((product) => (
               <div
