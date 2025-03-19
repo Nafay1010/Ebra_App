@@ -8,40 +8,15 @@ import { BsFillGrid3X3GapFill, BsFillGridFill } from "react-icons/bs";
 import { PiColumnsFill } from "react-icons/pi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
-
-const categories = [
-  "All Rooms",
-  "Living Room",
-  "Bedroom",
-  "Kitchen",
-  "Bathroom",
-  "Dinning",
-  "Outdoor",
-  "Office",
-  "Kids",
-  "Hallway",
-  "Storage",
-  "Lighting",
-  "Decor",
-  "Rugs",
-  "Textiles",
-  "Curtains",
-  "Mirrors",
-];
-
-const priceRanges = [
-  "$0.00 - 99.99",
-  "$100.00 - 199.99",
-  "$200.00 - 299.99",
-  "$300.00 - 399.99",
-  "$400.00+",
-];
+import { Button } from "@/components/ui/button";
 
 export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState("Living Room");
-  const [selectedPrice, setSelectedPrice] = useState(priceRanges[0]);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [priceRanges, setPriceRanges] = useState<string[]>([]);
+  const [selectedPrice, setSelectedPrice] = useState(priceRanges[0]);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -51,6 +26,32 @@ export default function Products() {
         const data = await res.json();
         console.log(data);
         setProducts(data);
+
+        // Get unique categories
+        setCategories(
+          Array.from(
+            new Set(
+              data.map((product: any) => product.category).filter(Boolean)
+            )
+          )
+        );
+
+        // Find min and max price
+        const prices = data.map((product: any) => product.price);
+        const minPrice = Math.min(...prices);
+        const maxPrice = Math.max(...prices);
+
+        // Create 5 price segments
+        const numSegments = 5;
+        const step = (maxPrice - minPrice) / numSegments;
+        const ranges = Array.from({ length: numSegments }, (_, i) => {
+          const start = minPrice + i * step;
+          const end = start + step;
+          return `$${start.toFixed(2)} - $${end.toFixed(2)}`;
+        });
+
+        setPriceRanges(ranges);
+        setSelectedPrice(ranges[0]); // Default range
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -83,7 +84,7 @@ export default function Products() {
         </div>
       </section>
 
-      <div className="container mx-auto py-10 flex gap-8">
+      <div className="mx-auto py-10 gap-12 flex w-full">
         {/* Sidebar */}
         <aside className="w-[20%]">
           <h3 className="font-semibold text-lg mb-10 flex items-center gap-2">
@@ -92,39 +93,57 @@ export default function Products() {
 
           <div>
             <h4 className="text-md font-semibold mb-4">CATEGORIES</h4>
-            <ul className="space-y-3 h-72 overflow-y-scroll scrollbar-visible">
-              {categories.map((category) => (
-                <li
-                  key={category}
-                  className={`cursor-pointer ${
-                    selectedCategory === category
-                      ? "text-black underline font-semibold"
-                      : "text-gray-500 hover:text-black"
-                  }`}
-                  onClick={() => setSelectedCategory(category)}
-                >
-                  {category}
-                </li>
-              ))}
+            <ul className="space-y-3 h-40 overflow-y-scroll scrollbar-visible">
+              {loading ? (
+                <div className="space-y-2">
+                  {[...Array(6)].map((_, i) => (
+                    <Skeleton key={i} className="w-32 h-5" /> // Adjust width & height for category text
+                  ))}
+                </div>
+              ) : (
+                categories.map((category) => (
+                  <li
+                    key={category}
+                    className={`cursor-pointer capitalize ${
+                      selectedCategory === category
+                        ? "text-black underline font-semibold"
+                        : "text-gray-500 hover:text-black"
+                    }`}
+                    onClick={() => setSelectedCategory(category)}
+                  >
+                    {category}
+                  </li>
+                ))
+              )}
             </ul>
           </div>
 
           <div className="mt-14">
             <h4 className="text-md font-semibold mb-4">PRICE</h4>
             <ul className="space-y-3">
-              {priceRanges.map((price) => (
-                <li
-                  key={price}
-                  className="flex items-center justify-between gap-2"
-                >
-                  <span>{price}</span>
-                  <Checkbox
-                    checked={selectedPrice === price}
-                    onCheckedChange={() => setSelectedPrice(price)}
-                    className="w-5 h-5 border border-gray-900 rounded"
-                  />
-                </li>
-              ))}
+              {loading
+                ? [...Array(6)].map((_, i) => (
+                    <li
+                      key={i}
+                      className="flex items-center justify-between gap-2"
+                    >
+                      <Skeleton className="w-32 h-5" />{" "}
+                      <Skeleton className="w-5 h-5 rounded" />{" "}
+                    </li>
+                  ))
+                : priceRanges.map((price) => (
+                    <li
+                      key={price}
+                      className="flex items-center justify-between gap-2"
+                    >
+                      <span>{price}</span>
+                      <Checkbox
+                        checked={selectedPrice === price}
+                        onCheckedChange={() => setSelectedPrice(price)}
+                        className="w-5 h-5 border border-gray-900 rounded"
+                      />
+                    </li>
+                  ))}
             </ul>
           </div>
         </aside>
@@ -132,7 +151,9 @@ export default function Products() {
         {/* Product Grid */}
         <section className="flex-1">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-semibold">{selectedCategory}</h2>
+            <h2 className="text-2xl font-semibold capitalize">
+              {selectedCategory}
+            </h2>
             <div className="flex items-center gap-4">
               <span>Sort by</span>
               <ChevronDown size={16} />
@@ -168,23 +189,35 @@ export default function Products() {
                 return (
                   <div
                     key={product.id}
-                    className="rounded-lg overflow-hidden shadow hover:shadow-lg transition-all duration-75 ease-linear"
+                    className="overflow-hidden shadow hover:shadow-lg transition-all duration-75 ease-linear"
                   >
                     {/* Product Image and Labels */}
-                    <div className="relative bg-slate-100">
+                    <div className="group relative p-2 bg-[#F2F2F2]">
                       <Image
                         src={product.image}
                         alt={product.title}
                         width={400}
                         height={300}
-                        className="w-full h-82 object-cover"
+                        className="w-full h-82 object-cover mb-12 brightness-95"
                       />
                       <span className="absolute top-2 left-2 bg-white text-black text-xs font-bold px-2 py-1 rounded">
                         NEW
                       </span>
+                      <Image
+                        src={"/assets/icons/heart.svg"}
+                        alt="Heart Icon"
+                        width={40}
+                        height={40}
+                        className="group-hover:block hidden absolute top-2 right-1"
+                      />
                       <span className="absolute top-10 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
                         -{discountPercentage}%
                       </span>
+
+                      {/* Ensure a fixed height so the layout doesn’t shift */}
+                      <div className="absolute bottom-0 left-0 w-full p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <Button className="w-full">Add to Cart</Button>
+                      </div>
                     </div>
 
                     {/* Product Details */}
