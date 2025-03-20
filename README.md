@@ -1,6 +1,10 @@
-# Next.js Project Setup
+# Ebra Assignment
 
-## Installation
+#### Made by Muhammad Abdul Nafay
+
+## Next.js Project Setup
+
+### Installation
 
 Clone the repository and install dependencies:
 
