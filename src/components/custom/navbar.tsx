@@ -15,7 +15,7 @@ export default function Navbar() {
   const { isOpen, toggleSidebar } = useSidebar();
 
   const links = [
-    { name: "Home", url: "/" },
+    { name: "Home", url: "/home" },
     { name: "Shop", url: "/shop" },
     { name: "Product", url: "/products" },
     { name: "Contact Us", url: "/contact-us" },
@@ -31,6 +31,10 @@ export default function Navbar() {
               alt="ticket-price"
               width={20}
               height={20}
+              style={{
+                width: "auto",
+                height: "auto",
+              }}
             />
             <span>30% off storewide — Limited time!</span>
 
@@ -45,6 +49,10 @@ export default function Navbar() {
                   alt="arrow-right"
                   width={18}
                   height={18}
+                  style={{
+                    width: "auto",
+                    height: "auto",
+                  }}
                 />
               </span>
             </Link>
@@ -58,6 +66,10 @@ export default function Navbar() {
               alt="close"
               width={20}
               height={20}
+              style={{
+                width: "auto",
+                height: "auto",
+              }}
             />
           </button>
         </div>
@@ -69,6 +81,10 @@ export default function Navbar() {
           alt="logo"
           width={100}
           height={100}
+          style={{
+            width: "auto",
+            height: "auto",
+          }}
         />
 
         <ul className="font-spaceGrotesk hidden md:flex space-x-6">
@@ -76,7 +92,7 @@ export default function Navbar() {
             <li
               key={link.name}
               className={`${
-                pathname === link.url ? "text-black" : "text-gray-400"
+                pathname.includes(link.url) ? "text-black" : "text-gray-400"
               } font-semibold cursor-pointer transition-all duration-300 hover:text-gray-800`}
             >
               <Link href={link.url}>{link.name}</Link>
@@ -90,12 +106,20 @@ export default function Navbar() {
             alt="Search"
             width={20}
             height={20}
+            style={{
+              width: "auto",
+              height: "auto",
+            }}
           />
           <Image
             src="/assets/icons/user-circle.svg"
             alt="User"
             width={20}
             height={20}
+            style={{
+              width: "auto",
+              height: "auto",
+            }}
           />
 
           <div
@@ -110,6 +134,10 @@ export default function Navbar() {
               width={20}
               height={20}
               className="cursor-pointer"
+              style={{
+                width: "auto",
+                height: "auto",
+              }}
             />
             {cart && cart.length > 0 && (
               <div className="absolute -top-2 -right-4 bg-black text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">

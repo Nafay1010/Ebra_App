@@ -5,7 +5,7 @@ import { FaFacebook, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
   const links = [
-    { name: "Home", url: "/" },
+    { name: "Home", url: "/home" },
     { name: "Shop", url: "/shop" },
     { name: "Product", url: "/products" },
     { name: "Contact Us", url: "/contact-us" },
@@ -21,6 +21,10 @@ const Footer = () => {
               alt="logo"
               width={100}
               height={100}
+              style={{
+                width: "auto",
+                height: "auto",
+              }}
             />
           </div>
 

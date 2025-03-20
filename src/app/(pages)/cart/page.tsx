@@ -94,6 +94,10 @@ export default function CartPage() {
                       width={64}
                       height={64}
                       className="w-28 h-28 min-w-28 min-h-28 rounded-lg object-cover"
+                      style={{
+                        width: "auto",
+                        height: "auto",
+                      }}
                     />
                     <div className="space-y-1.5">
                       <h2 className="font-semibold text-sm">{item.title}</h2>

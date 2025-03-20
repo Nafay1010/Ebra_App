@@ -42,7 +42,7 @@ export const ProductProvider = ({ children }) => {
       } catch (error) {
         console.error("Error fetching products:", error);
         toast.error("Failed to load products. Please try again later.");
-        setProducts([]); // Optionally set products to an empty array on error
+        setProducts([]);
       } finally {
         setLoading(false);
       }
