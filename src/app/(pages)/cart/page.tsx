@@ -32,7 +32,7 @@ export default function CartPage() {
       <h1 className="text-4xl font-normal font-poppins mb-6 text-center">
         Cart
       </h1>
-      <div className="flex items-center justify-center gap-20 mb-20 mt-10">
+      <div className="flex md:flex-row flex-col items-center justify-center gap-20 mb-20 mt-10">
         {/* Step 1: Shopping Cart */}
         <div className="flex flex-col items-center space-x-4">
           <div className="flex items-center gap-x-4">
