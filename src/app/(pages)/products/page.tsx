@@ -267,7 +267,7 @@ export default function Products() {
           {/* Products List */}
           {loading ? (
             <div
-              className={`grid lg:${layoutOptions} md:grid-cols-2 grid-cols-1 lg:gap-6 gap-3`}
+              className={`grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-6 gap-3`}
             >
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="border rounded overflow-hidden ">
@@ -281,7 +281,7 @@ export default function Products() {
             </div>
           ) : (
             <div
-              className={`grid lg:${layoutOptions} md:grid-cols-2 grid-cols-1 lg:gap-6 gap-3`}
+              className={`grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-6 gap-3`}
             >
               {sortedProducts.length === 0 ? (
                 <div>
@@ -299,7 +299,7 @@ export default function Products() {
                       key={product.id}
                       className="group cursor-pointer overflow-hidden shadow hover:shadow-lg transition-all duration-75 ease-linear"
                     >
-                      <div className=" relative p-2 bg-[#F2F2F2]">
+                      <div className="relative p-2 bg-[#F2F2F2]">
                         <Image
                           src={product.image}
                           alt={product.title}
