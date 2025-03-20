@@ -154,7 +154,7 @@ export default function CartPage() {
             </div>
           </div>
         </div>
-        <Card className="p-4 h-fit mt-14">
+        <Card className="p-4 h-fit mt-8">
           <h2 className="font-normal mb-4">Cart Summary</h2>
           <RadioGroup defaultValue="0" className="space-y-2">
             {shippingOptions.map((option) => (
