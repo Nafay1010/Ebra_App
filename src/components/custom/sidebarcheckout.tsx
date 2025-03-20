@@ -50,7 +50,7 @@ const SidebarCheckout = ({ isOpen, onClose }: SidebarCheckoutProps) => {
     const product: Product | undefined = cart.find(
       (product: Product) => product.id === id
     );
-    if (product && product.quantity > 1) {
+    if (product && product.quantity > 0) {
       updateQuantity(id, product.quantity - 1);
     }
   };

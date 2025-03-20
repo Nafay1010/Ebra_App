@@ -32,22 +32,60 @@ export default function CartPage() {
       <h1 className="text-4xl font-normal font-poppins mb-6 text-center">
         Cart
       </h1>
+      <div className="flex items-center justify-center gap-20 mb-20 mt-10">
+        {/* Step 1: Shopping Cart */}
+        <div className="flex flex-col items-center space-x-4">
+          <div className="flex items-center gap-x-4">
+            <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+              <span className="text-white text-lg font-thin">1</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-normal text-sm">Shopping Cart</span>
+            </div>
+          </div>
+          <div className="w-full h-0.5 bg-gray-500 relative top-3"></div>
+        </div>
+
+        {/* Step 2: Checkout Details */}
+        <div className="flex items-center space-x-4">
+          <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
+            <span className="text-white text-lg font-thin">2</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-normal text-sm text-gray-500">
+              Checkout Details
+            </span>
+          </div>
+        </div>
+
+        {/* Step 3: Order Complete */}
+        <div className="flex items-center space-x-4">
+          <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
+            <span className="text-white text-lg font-thin">3</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-normal text-sm  text-gray-500">
+              Order Complete
+            </span>
+          </div>
+        </div>
+      </div>
       <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 place-content-center gap-10">
         <div className="xl:col-span-2 space-y-4">
           {cart.length === 0 ? (
             <p className="text-center text-gray-500">No items in cart</p>
           ) : (
-            <div>
+            <div className="max-h-[35rem] overflow-y-auto">
               <div className="grid border-b border-b-gray-600 grid-cols-5 text-gray-500 font-medium py-2">
                 <span className="col-span-2">Product</span>
-                <span className="relative left-2">Quantity</span>
-                <span className="relative left-8">Price</span>
-                <span className="relative left-8">Subtotal</span>
+                <span className="relative left-4">Quantity</span>
+                <span className="relative left-10">Price</span>
+                <span className="relative left-10">Subtotal</span>
               </div>
               {cart.map((item: CartItem) => (
                 <div
                   key={item.id}
-                  className="grid grid-cols-5 items-center gap-6 border-b p-4"
+                  className="grid grid-cols-5 items-center gap-6 border-b border-b-gray-300 p-6"
                 >
                   <div className="flex items-center gap-4 col-span-2">
                     <Image
@@ -55,7 +93,7 @@ export default function CartPage() {
                       alt={item.title}
                       width={64}
                       height={64}
-                      className="w-20 h-20 rounded-lg object-cover"
+                      className="w-28 h-28 min-w-28 min-h-28 rounded-lg object-cover"
                     />
                     <div className="space-y-1.5">
                       <h2 className="font-semibold text-sm">{item.title}</h2>
@@ -100,7 +138,7 @@ export default function CartPage() {
             </div>
           )}
 
-          <div className="mt-4">
+          <div className="mt-20">
             <h3 className="font-normal mb-2">Have a coupon?</h3>
             <p className="text-sm font-normal text-gray-400 mb-2">
               Add your code for an instant cart discount
@@ -116,7 +154,7 @@ export default function CartPage() {
             </div>
           </div>
         </div>
-        <Card className="p-4">
+        <Card className="p-4 h-fit mt-14">
           <h2 className="font-normal mb-4">Cart Summary</h2>
           <RadioGroup defaultValue="0" className="space-y-2">
             {shippingOptions.map((option) => (

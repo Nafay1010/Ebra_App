@@ -29,6 +29,7 @@ export default function Products() {
   const [priceRanges, setPriceRanges] = useState<string[]>([]);
   const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [layoutOptions, setLayoutOptions] = useState("grid-cols-3");
 
   const filteredProducts = products.filter((product) => {
     const categoryMatch = selectedCategory
@@ -229,16 +230,45 @@ export default function Products() {
               </div>
 
               <div className="flex items-center">
-                <BsFillGrid3X3GapFill className="text-4xl px-2.5 bg-slate-100 text-black" />
-                <BsFillGridFill className="text-4xl px-2.5 text-gray-500" />
-                <PiColumnsFill className="text-4xl px-2.5 text-gray-500" />
+                <BsFillGrid3X3GapFill
+                  onClick={() => {
+                    setLayoutOptions("grid-cols-3");
+                  }}
+                  className={`text-4xl px-2.5 ${
+                    layoutOptions === "grid-cols-3"
+                      ? "bg-slate-100 text-black"
+                      : "bg-white text-gray-500"
+                  } `}
+                />
+                <BsFillGridFill
+                  onClick={() => {
+                    setLayoutOptions("grid-cols-2");
+                  }}
+                  className={`text-4xl px-2.5 ${
+                    layoutOptions === "grid-cols-2"
+                      ? "bg-slate-100 text-black"
+                      : "bg-white text-gray-500"
+                  } `}
+                />
+                <PiColumnsFill
+                  onClick={() => {
+                    setLayoutOptions("grid-cols-1");
+                  }}
+                  className={`text-4xl px-2.5 ${
+                    layoutOptions === "grid-cols-1"
+                      ? "bg-slate-100 text-black"
+                      : "bg-white text-gray-500"
+                  } `}
+                />
               </div>
             </div>
           </div>
 
           {/* Products List */}
           {loading ? (
-            <div className="grid grid-cols-3 gap-6">
+            <div
+              className={`grid lg:${layoutOptions} md:grid-cols-2 grid-cols-1 lg:gap-6 gap-3`}
+            >
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="border rounded overflow-hidden ">
                   <Skeleton className="w-full h-48" />
@@ -250,7 +280,9 @@ export default function Products() {
               ))}
             </div>
           ) : (
-            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-6 gap-3">
+            <div
+              className={`grid lg:${layoutOptions} md:grid-cols-2 grid-cols-1 lg:gap-6 gap-3`}
+            >
               {sortedProducts.length === 0 ? (
                 <div>
                   <h1 className="text-2xl">No products found</h1>
