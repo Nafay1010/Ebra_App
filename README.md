@@ -1,7 +1,5 @@
 # Ebra Assignment
 
-#### Made by Muhammad Abdul Nafay
-
 ## Next.js Project Setup
 
 ### Installation
