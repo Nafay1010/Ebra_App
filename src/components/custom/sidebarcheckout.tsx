@@ -61,8 +61,11 @@ const SidebarCheckout = ({ isOpen, onClose }: SidebarCheckoutProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/30 z-50">
-      <div className="p-2 fixed right-0 top-0 h-full w-96 backdrop-blur-3xl bg-white shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col">
+    <div className="fixed inset-0 bg-black/30 z-50" onClick={() => onClose()}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="p-2 fixed right-0 top-0 h-full w-96 backdrop-blur-3xl bg-white shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col"
+      >
         <div className="p-6 flex-1 overflow-y-auto">
           <h2 className="text-2xl font-bold mb-6">Cart</h2>
 
