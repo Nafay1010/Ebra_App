@@ -306,10 +306,6 @@ export default function Products() {
                           width={400}
                           height={300}
                           className="w-full h-82 object-cover mb-12 brightness-95"
-                          style={{
-                            width: "auto",
-                            height: "auto",
-                          }}
                         />
                         <span className="absolute top-2 left-2 bg-white text-black text-xs font-bold px-2 py-1 rounded">
                           NEW
@@ -320,10 +316,6 @@ export default function Products() {
                           width={40}
                           height={40}
                           className="group-hover:block hidden absolute top-2 right-1"
-                          style={{
-                            width: "auto",
-                            height: "auto",
-                          }}
                         />
                         <span className="absolute top-10 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
                           -{discountPercentage}%

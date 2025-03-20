@@ -96,10 +96,6 @@ const SidebarCheckout = ({ isOpen, onClose }: SidebarCheckoutProps) => {
                       width={64}
                       height={64}
                       className="w-24 h-24 object-cover rounded"
-                      style={{
-                        width: "auto",
-                        height: "auto",
-                      }}
                     />
                     <div className="flex-1">
                       <p className="font-semibold text-xs">{product.title}</p>
@@ -135,10 +131,6 @@ const SidebarCheckout = ({ isOpen, onClose }: SidebarCheckoutProps) => {
                           alt="close"
                           width={20}
                           height={20}
-                          style={{
-                            width: "auto",
-                            height: "auto",
-                          }}
                         />
                       </button>
                     </div>
@@ -183,10 +175,6 @@ const SidebarCheckout = ({ isOpen, onClose }: SidebarCheckoutProps) => {
             alt="close"
             width={25}
             height={25}
-            style={{
-              width: "auto",
-              height: "auto",
-            }}
           />
         </button>
       </div>
